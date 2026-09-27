@@ -189,7 +189,7 @@ export default async function WorkoutDetailPage({ params }) {
                 className="flex flex-1 items-center justify-center gap-2 rounded-md bg-[#ccff00] px-5 py-4 text-xs font-black uppercase text-black transition hover:bg-[#b8e600]"
               >
                 <span className="text-lg">＋</span>
-                Add to today's plan
+                Add to today&apos;s plan
               </button>
 
               {/* Secondary */}

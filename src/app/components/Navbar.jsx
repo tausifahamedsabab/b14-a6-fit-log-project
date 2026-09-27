@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePlan } from "../context/PlanContext";
 
 export default function Navbar() {
+  const { plan, saved } = usePlan();
+
   return (
     <nav className="flex h-[70px] items-center justify-between border-b border-[#1d1e22] bg-[#0b0c0e] px-7">
       {/* Logo */}
@@ -33,22 +38,22 @@ export default function Navbar() {
       {/* Right Side */}
       <div className="flex items-center gap-6 text-[12px]">
         {/* Plan */}
-        <div className="flex items-center gap-2 text-gray-300">
+        <Link href="/my-plan" className="flex items-center gap-2 text-gray-300">
           <span>Plan</span>
 
           <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#ccff00] text-[10px] font-bold text-black">
-            0
+            {plan.length}
           </span>
-        </div>
+        </Link>
 
         {/* Saved */}
-        <div className="flex items-center gap-2 text-gray-300">
+        <Link href="/my-plan" className="flex items-center gap-2 text-gray-300">
           <span>Saved</span>
 
           <span className="flex h-4 w-4 items-center justify-center rounded-full border border-gray-700 text-[9px] text-gray-400">
-            0
+            {saved.length}
           </span>
-        </div>
+        </Link>
       </div>
     </nav>
   );
