@@ -31,12 +31,12 @@ export default function Banner() {
         </div>
 
         {/* Right Image */}
-        <div className="absolute bottom-0 right-8 h-[340px] w-[350px]">
+        <div className="absolute right-8 top-1/2 h-[330px] w-[350px] -translate-y-1/2">
           <Image
             src="/banner.png"
             alt="Workout illustration"
             fill
-            className="object-contain object-bottom"
+            className="object-contain"
             priority
           />
         </div>
