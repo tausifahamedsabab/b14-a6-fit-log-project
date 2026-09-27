@@ -8,8 +8,9 @@ export function PlanProvider({ children }) {
   const [plan, setPlan] = useState([]);
   const [saved, setSaved] = useState([]);
   const [toast, setToast] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // localStorage থেকে data load করা
+  // Load saved data from localStorage
   useEffect(() => {
     const storedPlan = localStorage.getItem("fitlog-plan");
     const storedSaved = localStorage.getItem("fitlog-saved");
@@ -29,14 +30,18 @@ export function PlanProvider({ children }) {
         setSaved(parsedSaved);
       }, 0);
     }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 0);
   }, []);
 
-  // plan change হলে localStorage update
+  // Save plan to localStorage
   useEffect(() => {
     localStorage.setItem("fitlog-plan", JSON.stringify(plan));
   }, [plan]);
 
-  // saved change হলে localStorage update
+  // Save saved workouts to localStorage
   useEffect(() => {
     localStorage.setItem("fitlog-saved", JSON.stringify(saved));
   }, [saved]);
@@ -49,6 +54,7 @@ export function PlanProvider({ children }) {
     }, 2500);
   };
 
+  // Add workout to today's plan
   const addToPlan = (workout) => {
     const alreadyExists = plan.some((item) => item.id === workout.id);
 
@@ -57,11 +63,17 @@ export function PlanProvider({ children }) {
       return;
     }
 
+    if (plan.length >= 5) {
+      showToast("Today's plan is full");
+      return;
+    }
+
     setPlan((currentPlan) => [...currentPlan, workout]);
 
     showToast("Added to today's plan");
   };
 
+  // Save workout
   const saveForLater = (workout) => {
     const alreadyExists = saved.some((item) => item.id === workout.id);
 
@@ -75,13 +87,34 @@ export function PlanProvider({ children }) {
     showToast("Saved for later");
   };
 
+  // Remove workout from today's plan
+  const removeFromPlan = (id) => {
+    setPlan((currentPlan) =>
+      currentPlan.filter((workout) => workout.id !== id),
+    );
+
+    showToast("Removed from today's plan");
+  };
+
+  // Remove workout from saved
+  const removeFromSaved = (id) => {
+    setSaved((currentSaved) =>
+      currentSaved.filter((workout) => workout.id !== id),
+    );
+
+    showToast("Removed from saved");
+  };
+
   return (
     <PlanContext.Provider
       value={{
         plan,
         saved,
+        loading,
         addToPlan,
         saveForLater,
+        removeFromPlan,
+        removeFromSaved,
       }}
     >
       {children}

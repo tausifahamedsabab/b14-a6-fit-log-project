@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import workouts from "@/app/data/workouts.json";
+import WorkoutActions from "@/app/components/WorkoutActions";
 
 export default async function WorkoutDetailPage({ params }) {
   const { id } = await params;
@@ -33,9 +34,9 @@ export default async function WorkoutDetailPage({ params }) {
           ← Back to Library
         </Link>
 
-        {/* ================= MAIN TWO COLUMN ================= */}
+        {/* Main Two Column */}
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-          {/* ================= LEFT : IMAGE ================= */}
+          {/* Left - Image */}
           <div className="relative h-[500px] overflow-hidden rounded-xl border border-[#292b31] bg-[#17181d] lg:h-[700px]">
             <Image
               src={workout.image}
@@ -45,7 +46,7 @@ export default async function WorkoutDetailPage({ params }) {
             />
           </div>
 
-          {/* ================= RIGHT : DETAILS ================= */}
+          {/* Right - Details */}
           <div>
             {/* Title */}
             <h1 className="text-4xl font-black uppercase leading-tight text-white md:text-5xl">
@@ -57,7 +58,7 @@ export default async function WorkoutDetailPage({ params }) {
               {workout.description}
             </p>
 
-            {/* Category Tags */}
+            {/* Muscle Groups */}
             <div className="mt-5 flex flex-wrap gap-2">
               {workout.muscleGroups.map((muscle) => (
                 <span
@@ -69,7 +70,7 @@ export default async function WorkoutDetailPage({ params }) {
               ))}
             </div>
 
-            {/* ================= KEY SPECS ================= */}
+            {/* Key Specs */}
             <div className="mt-8">
               <h2 className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-white">
                 Key Specs
@@ -155,7 +156,7 @@ export default async function WorkoutDetailPage({ params }) {
               </div>
             </div>
 
-            {/* ================= INSTRUCTIONS ================= */}
+            {/* Instructions */}
             <div className="mt-8">
               <h2 className="text-sm font-black uppercase tracking-[0.2em] text-white">
                 Instructions
@@ -167,12 +168,10 @@ export default async function WorkoutDetailPage({ params }) {
                     key={index}
                     className="flex gap-4 border-b border-[#292b31] pb-4"
                   >
-                    {/* Number */}
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-[#ccff00] text-[10px] font-black text-black">
                       {String(index + 1).padStart(2, "0")}
                     </span>
 
-                    {/* Instruction */}
                     <p className="text-sm leading-6 text-gray-400">
                       {instruction}
                     </p>
@@ -181,26 +180,8 @@ export default async function WorkoutDetailPage({ params }) {
               </ol>
             </div>
 
-            {/* ================= ACTION BUTTONS ================= */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {/* Primary */}
-              <button
-                type="button"
-                className="flex flex-1 items-center justify-center gap-2 rounded-md bg-[#ccff00] px-5 py-4 text-xs font-black uppercase text-black transition hover:bg-[#b8e600]"
-              >
-                <span className="text-lg">＋</span>
-                Add to today&apos;s plan
-              </button>
-
-              {/* Secondary */}
-              <button
-                type="button"
-                className="flex flex-1 items-center justify-center gap-2 rounded-md border border-[#292b31] bg-[#17181d] px-5 py-4 text-xs font-black uppercase text-white transition hover:border-[#ccff00]"
-              >
-                <span className="text-lg">♡</span>
-                Save for later
-              </button>
-            </div>
+            {/* Action Buttons */}
+            <WorkoutActions workout={workout} />
           </div>
         </div>
       </section>
