@@ -24,6 +24,12 @@ FitLog is a modern workout library web application that helps users explore exer
 9. Custom 404 page for invalid routes.
 10. Toast notifications for workout actions.
 
+## Optional Features
+
+- Persist the plan and saved workout data in `localStorage` so the data survives page reloads.
+- Search workouts by workout name or muscle group/tag.
+- Disable the "Add to today's plan" button when the plan reaches the five-workout limit.
+
 ## Project Structure
 
 ```text
