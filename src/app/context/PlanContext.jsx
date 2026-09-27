@@ -93,6 +93,13 @@ export function PlanProvider({ children }) {
 
     showToast("Removed from today's plan");
   };
+  const markAsDone = (id) => {
+    setPlan((currentPlan) =>
+      currentPlan.filter((workout) => workout.id !== id),
+    );
+
+    showToast("Workout marked as done");
+  };
 
   const removeFromSaved = (id) => {
     setSaved((currentSaved) =>
@@ -112,6 +119,7 @@ export function PlanProvider({ children }) {
         saveForLater,
         removeFromPlan,
         removeFromSaved,
+        markAsDone,
       }}
     >
       {children}

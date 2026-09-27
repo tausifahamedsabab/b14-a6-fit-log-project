@@ -6,11 +6,29 @@ import { useState } from "react";
 import { usePlan } from "../context/PlanContext";
 
 export default function MyPlanPage() {
-  const { plan, saved, loading, removeFromPlan, removeFromSaved } = usePlan();
+  const { plan, saved, loading, removeFromPlan, removeFromSaved, markAsDone } =
+    usePlan();
 
   const [activeTab, setActiveTab] = useState("plan");
+  const [sortBy, setSortBy] = useState("duration");
 
   const currentWorkouts = activeTab === "plan" ? plan : saved;
+
+  const sortedWorkouts = [...currentWorkouts].sort((a, b) => {
+    if (sortBy === "duration") {
+      return Number(a.duration) - Number(b.duration);
+    }
+
+    if (sortBy === "calories") {
+      return Number(a.caloriesBurned) - Number(b.caloriesBurned);
+    }
+
+    if (sortBy === "rating") {
+      return Number(b.rating) - Number(a.rating);
+    }
+
+    return 0;
+  });
 
   const exercises = currentWorkouts.length;
 
@@ -119,67 +137,88 @@ export default function MyPlanPage() {
             </Link>
           </div>
         ) : (
-          <div className="mt-8 space-y-4">
-            {currentWorkouts.map((workout) => (
-              <div
-                key={workout.id}
-                className="flex flex-col gap-5 rounded-xl border border-[#292b31] bg-[#17181d] p-4 md:flex-row md:items-center"
-              >
-                <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg md:h-28 md:w-44">
-                  <Image
-                    src={workout.image}
-                    alt={workout.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+          <>
+            <div className="mt-6 flex justify-end">
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value)}
+                  className="appearance-none rounded-md border border-[#292b31] bg-[#17181d] px-4 py-3 pr-10 text-xs font-black uppercase text-white outline-none focus:border-[#ccff00]"
+                >
+                  <option value="duration">Duration</option>
+                  <option value="calories">Calories</option>
+                  <option value="rating">Rating</option>
+                </select>
 
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-lg font-black uppercase text-white">
-                    {workout.name}
-                  </h2>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  ▼
+                </span>
+              </div>
+            </div>
 
-                  <p className="mt-1 text-xs text-gray-500">
-                    {workout.equipment}
-                  </p>
-
-                  <div className="mt-4 flex flex-wrap gap-5 text-[10px] text-gray-400">
-                    <span>◷ {workout.duration} min</span>
-                    <span>🔥 {workout.caloriesBurned} kcal</span>
-                    <span>★ {workout.rating}</span>
+            <div className="mt-4 space-y-4">
+              {sortedWorkouts.map((workout) => (
+                <div
+                  key={workout.id}
+                  className="flex flex-col gap-5 rounded-xl border border-[#292b31] bg-[#17181d] p-4 md:flex-row md:items-center"
+                >
+                  <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg md:h-28 md:w-44">
+                    <Image
+                      src={workout.image}
+                      alt={workout.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                </div>
 
-                <div className="flex flex-wrap gap-2">
-                  <Link
-                    href={`/workout/${workout.id}`}
-                    className="rounded-md border border-[#292b31] px-4 py-3 text-[10px] font-black uppercase text-white transition hover:border-[#ccff00] hover:text-[#ccff00]"
-                  >
-                    View Details
-                  </Link>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-lg font-black uppercase text-white">
+                      {workout.name}
+                    </h2>
 
-                  {activeTab === "plan" && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      {workout.equipment}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-5 text-[10px] text-gray-400">
+                      <span>◷ {workout.duration} min</span>
+                      <span>🔥 {workout.caloriesBurned} kcal</span>
+                      <span>★ {workout.rating}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href={`/workout/${workout.id}`}
+                      className="rounded-md border border-[#292b31] px-4 py-3 text-[10px] font-black uppercase text-white transition hover:border-[#ccff00] hover:text-[#ccff00]"
+                    >
+                      View Details
+                    </Link>
+
+                    {activeTab === "plan" && (
+                      <button
+                        type="button"
+                        onClick={() => markAsDone(workout.id)}
+                        className="flex items-center gap-2 rounded-md border border-[#292b31] px-4 py-3 text-[10px] font-black uppercase text-gray-400 transition hover:border-[#ccff00] hover:text-[#ccff00]"
+                      >
+                        <span>✓</span>
+                        Mark as Done
+                      </button>
+                    )}
+
                     <button
                       type="button"
-                      onClick={() => removeFromPlan(workout.id)}
-                      className="rounded-md border border-[#292b31] px-4 py-3 text-[10px] font-black uppercase text-gray-400 transition hover:border-red-500 hover:text-red-500"
+                      onClick={() => handleRemove(workout.id)}
+                      className="flex h-10 w-10 items-center justify-center rounded-md border border-[#292b31] text-gray-500 transition hover:border-red-500 hover:text-red-500"
+                      aria-label="Remove workout"
                     >
-                      Mark as Done
+                      ×
                     </button>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => handleRemove(workout.id)}
-                    className="flex h-10 w-10 items-center justify-center rounded-md border border-[#292b31] text-gray-500 transition hover:border-red-500 hover:text-red-500"
-                    aria-label="Remove workout"
-                  >
-                    ×
-                  </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         )}
       </section>
     </main>
