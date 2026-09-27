@@ -11,22 +11,28 @@ export function PlanProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedPlan = localStorage.getItem("fitlog-plan");
-      const storedSaved = localStorage.getItem("fitlog-saved");
+    const loadData = () => {
+      try {
+        const storedPlan = localStorage.getItem("fitlog-plan");
+        const storedSaved = localStorage.getItem("fitlog-saved");
 
-      if (storedPlan) {
-        setPlan(JSON.parse(storedPlan));
+        if (storedPlan) {
+          setPlan(JSON.parse(storedPlan));
+        }
+
+        if (storedSaved) {
+          setSaved(JSON.parse(storedSaved));
+        }
+      } catch (error) {
+        console.error("Failed to load workout data:", error);
       }
 
-      if (storedSaved) {
-        setSaved(JSON.parse(storedSaved));
-      }
-    } catch (error) {
-      console.error("Failed to load workout data:", error);
-    } finally {
       setLoading(false);
-    }
+    };
+
+    const timer = setTimeout(loadData, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {

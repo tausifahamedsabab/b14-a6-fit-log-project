@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { PlanProvider } from "./context/PlanContext";
+import Footer from "./components/Footer";
 
 export const metadata = {
   title: "My Fit App",
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
         <PlanProvider>
           <Navbar />
           {children}
+          <Footer />
         </PlanProvider>
       </body>
     </html>
